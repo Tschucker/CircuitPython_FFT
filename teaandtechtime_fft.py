@@ -50,6 +50,7 @@ Implementation Notes
 # imports
 from math import pi, sin, cos, sqrt, pow, log
 from adafruit_itertools import islice, count
+import array
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/tschucker/Teaandtechtime_CircuitPython_FFT.git"
@@ -60,12 +61,12 @@ def cpy_fft(x):
     if N <= 1: return x
     even = cpy_fft(list(islice(x,0,N,2)))
     odd =  cpy_fft(list(islice(x,1,N,2)))
-    T = [(cos(2*pi*k/N)*odd[k][0]+sin(2*pi*k/N)*odd[k][1], cos(2*pi*k/N)*odd[k][1]-sin(2*pi*k/N)*odd[k][0]) for k in range(N//2)]
-    return [(even[k][0] + T[k][0], even[k][1] + T[k][1]) for k in range(N//2)] + \
-           [(even[k][0] - T[k][0] , even[k][1] - T[k][1]) for k in range(N//2)]
+    T = [cos(2*pi*k/N)*odd[k].real+sin(2*pi*k/N)*odd[k].imag + (cos(2*pi*k/N)*odd[k].imag-sin(2*pi*k/N)*odd[k].real)*1j for k in range(N//2)]
+    return [even[k].real + T[k].real + (even[k].imag + T[k].imag)*1j for k in range(N//2)] + \
+           [even[k].real - T[k].real + (even[k].imag - T[k].imag)*1j for k in range(N//2)]
 
 def cpy_abs(x):
-    return sqrt(pow(x[0],2) + pow(x[1],2))
+    return sqrt(pow(x.real,2) + pow(x.imag,2))
 
 def spectro(x):
     freq = cpy_fft(x)
