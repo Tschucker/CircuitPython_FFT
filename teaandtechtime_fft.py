@@ -55,27 +55,34 @@ import array
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/tschucker/Teaandtechtime_CircuitPython_FFT.git"
 
-
-def cpy_fft(x):
+def fft(x):
     N = len(x)
     if N <= 1: return x
-    even = cpy_fft(list(islice(x,0,N,2)))
-    odd =  cpy_fft(list(islice(x,1,N,2)))
+    even = fft(list(islice(x,0,N,2)))
+    odd =  fft(list(islice(x,1,N,2)))
     T = [cos(2*pi*k/N)*odd[k].real+sin(2*pi*k/N)*odd[k].imag + (cos(2*pi*k/N)*odd[k].imag-sin(2*pi*k/N)*odd[k].real)*1j for k in range(N//2)]
     return [even[k].real + T[k].real + (even[k].imag + T[k].imag)*1j for k in range(N//2)] + \
            [even[k].real - T[k].real + (even[k].imag - T[k].imag)*1j for k in range(N//2)]
 
-def cpy_abs(x):
+def cmplx_abs(x):
     return sqrt(pow(x.real,2) + pow(x.imag,2))
 
-def spectro(x):
-    freq = cpy_fft(x)
+def spectrogram(x):
+    freq = fft(x)
     temp_list = []
     for f in freq:
-        abs_val = cpy_abs(f)
+        abs_val = cmplx_abs(f)
         if  abs_val != 0.0:
             temp_list.append(int(log(abs_val)))
         else:
             temp_list.append(0)
-
     return temp_list
+
+def ifft(x):
+    for s in x:
+        s = (s.imag + s.real*1j)
+    temp = fft(x)
+    for s in temp:
+        s = (s.imag + s.real*1j)/float(len(x))
+    return temp
+
