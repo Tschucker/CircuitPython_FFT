@@ -48,6 +48,7 @@ import array
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/tschucker/Teaandtechtime_CircuitPython_FFT.git"
 
+#Computes the complex fft of the input array needs to be power of 2 length to work.
 def fft(x):
     N = len(x)
     if N <= 1: return x
@@ -57,6 +58,8 @@ def fft(x):
     return [even[k].real + T[k].real + (even[k].imag + T[k].imag)*1j for k in range(N//2)] + \
            [even[k].real - T[k].real + (even[k].imag - T[k].imag)*1j for k in range(N//2)]
 
+#Computes the complex inverse fft of the input array needs to be power of 2 length to work
+#not the most efficiant but uses the same fft code.
 def ifft(x):
     fft_len = float(len(x))
     x_swap = []
@@ -68,6 +71,7 @@ def ifft(x):
         temp_swap.append((s.imag/fft_len) + (s.real/fft_len)*1j)
     return temp_swap
 
+#Computes the double sided spectrogram of the input array needs to be a power of 2 to work
 def spectrogram(x):
     freq = fft(x)
     temp_list = []
