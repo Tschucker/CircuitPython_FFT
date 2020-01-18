@@ -64,25 +64,25 @@ def fft(x):
     return [even[k].real + T[k].real + (even[k].imag + T[k].imag)*1j for k in range(N//2)] + \
            [even[k].real - T[k].real + (even[k].imag - T[k].imag)*1j for k in range(N//2)]
 
-def cmplx_abs(x):
-    return sqrt(pow(x.real,2) + pow(x.imag,2))
+def ifft(x):
+    fft_len = float(len(x))
+    x_swap = []
+    for s in x:
+        x_swap.append(s.imag + s.real*1j)
+    temp = fft(x_swap)
+    temp_swap = []
+    for s in temp:
+        temp_swap.append((s.imag/fft_len) + (s.real/fft_len)*1j)
+    return temp_swap
 
 def spectrogram(x):
     freq = fft(x)
     temp_list = []
     for f in freq:
-        abs_val = cmplx_abs(f)
+        abs_val = abs(f)
         if  abs_val != 0.0:
             temp_list.append(int(log(abs_val)))
         else:
             temp_list.append(0)
     return temp_list
-
-def ifft(x):
-    for s in x:
-        s = (s.imag + s.real*1j)
-    temp = fft(x)
-    for s in temp:
-        s = (s.imag + s.real*1j)/float(len(x))
-    return temp
 
