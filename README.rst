@@ -30,6 +30,9 @@ This is easily achieved by downloading
 Usage Example
 =============
 
+* `Adafruit Edge Badge Audio Waterfall <https://github.com/Tschucker/circuitpython_edgebadge_audio_spectrum_waterfall_display>`_
+
+Make sure to follow the directions for connecting the microphone for the circuitpython i2s library support.
 
 Contributing
 ============
