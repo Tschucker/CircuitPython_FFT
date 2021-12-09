@@ -42,7 +42,7 @@ Implementation Notes
 
 # imports
 from math import pi, sin, cos, sqrt, pow, log
-from adafruit_itertools import islice, count
+from adafruit_itertools.adafruit_itertools import islice, count
 import array
 
 __version__ = "0.0.0-auto.0"
