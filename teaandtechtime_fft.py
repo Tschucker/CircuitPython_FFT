@@ -42,7 +42,7 @@ Implementation Notes
 
 # imports
 from math import pi, sin, cos, sqrt, pow, log
-from adafruit_itertools import islice, count
+from adafruit_itertools.adafruit_itertools import islice, count, chain, repeat
 import array
 
 __version__ = "0.0.0-auto.0"
@@ -52,8 +52,14 @@ __repo__ = "https://github.com/tschucker/Teaandtechtime_CircuitPython_FFT.git"
 def fft(x):
     N = len(x)
     if N <= 1: return x
-    even = fft(list(islice(x,0,N,2)))
-    odd =  fft(list(islice(x,1,N,2)))
+    even = fft(list(islice(
+        chain(x, repeat(0)),
+        0, N, 2
+    )))
+    odd = fft(list(islice(
+        chain(x, repeat(0)),
+        1, N, 2
+    )))
     T = [cos(2*pi*k/N)*odd[k].real+sin(2*pi*k/N)*odd[k].imag + (cos(2*pi*k/N)*odd[k].imag-sin(2*pi*k/N)*odd[k].real)*1j for k in range(N//2)]
     return [even[k].real + T[k].real + (even[k].imag + T[k].imag)*1j for k in range(N//2)] + \
            [even[k].real - T[k].real + (even[k].imag - T[k].imag)*1j for k in range(N//2)]
